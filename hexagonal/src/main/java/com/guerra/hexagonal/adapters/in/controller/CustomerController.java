@@ -2,14 +2,16 @@ package com.guerra.hexagonal.adapters.in.controller;
 
 import com.guerra.hexagonal.adapters.in.controller.mapper.CustomerMapper;
 import com.guerra.hexagonal.adapters.in.controller.request.CustomerRequest;
+import com.guerra.hexagonal.adapters.in.controller.response.CustomerResponse;
+import com.guerra.hexagonal.application.core.domain.Customer;
+import com.guerra.hexagonal.application.ports.in.DeleteCustomerByIdInputPort;
+import com.guerra.hexagonal.application.ports.in.FindCustomerByIdInputPort;
 import com.guerra.hexagonal.application.ports.in.InsertCustomerInputPort;
+import com.guerra.hexagonal.application.ports.in.UpdateCustomerInputPort;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/customers")
@@ -19,6 +21,15 @@ public class CustomerController {
     private InsertCustomerInputPort insertCustomerInputPort;
 
     @Autowired
+    private FindCustomerByIdInputPort findCustomerByIdInputPort;
+
+    @Autowired
+    private UpdateCustomerInputPort updateCustomerInputPort;
+
+    @Autowired
+    private DeleteCustomerByIdInputPort deleteCustomerByIdInputPort;
+
+    @Autowired
     private CustomerMapper customerMapper;
 
     @PostMapping
@@ -26,5 +37,27 @@ public class CustomerController {
         var customer = customerMapper.toCostumer(customerRequest);
         insertCustomerInputPort.insert(customer, customerRequest.getZipCode());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerResponse> findById(@PathVariable final String id) {
+        var customer = findCustomerByIdInputPort.find(id);
+        var customerResponse = customerMapper.toCustomerResponse(customer);
+
+        return ResponseEntity.ok().body(customerResponse);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable final String id, @Valid @RequestBody CustomerRequest customerRequest) {
+        Customer customer = customerMapper.toCostumer(customerRequest);
+        customer.setId(id);
+        updateCustomerInputPort.update(customer, customerRequest.getZipCode());
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable final String id) {
+        deleteCustomerByIdInputPort.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

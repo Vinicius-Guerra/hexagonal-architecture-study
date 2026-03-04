@@ -2,7 +2,7 @@ package com.guerra.hexagonal.application.ports.in;
 
 import com.guerra.hexagonal.application.core.domain.Customer;
 
-public interface InsertCustomerInputPort {
+public interface FindCustomerByIdInputPort {
 
-    void insert(Customer customer, String zipCode);
+    Customer find(String id);
 }
