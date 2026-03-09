@@ -4,7 +4,6 @@ import com.guerra.hexagonal.application.core.domain.Customer;
 
 public interface InsertCustomerOutputPort {
 
-    void inser(Customer) {
+    void insert(Customer customer);
 
-    }
 }

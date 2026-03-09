@@ -9,6 +9,7 @@ import com.guerra.hexagonal.application.ports.out.InsertCustomerOutputPort;
 public class InsertCustomerUseCase implements InsertCustomerInputPort {
 
     private final FindAddressByZipCodeOutputPort findAddressByZipCodeOutputPort;
+
     private final InsertCustomerOutputPort insertCustomerOutputPort;
 
     public InsertCustomerUseCase(
