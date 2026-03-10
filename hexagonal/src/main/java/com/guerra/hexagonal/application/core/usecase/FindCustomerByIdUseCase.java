@@ -1,6 +1,7 @@
 package com.guerra.hexagonal.application.core.usecase;
 
 import com.guerra.hexagonal.application.core.domain.Customer;
+import com.guerra.hexagonal.application.core.exceptions.ObjectNotFoundException;
 import com.guerra.hexagonal.application.ports.in.FindCustomerByIdInputPort;
 import com.guerra.hexagonal.application.ports.out.FindCustomerByIdOutputPort;
 
@@ -14,6 +15,6 @@ public class FindCustomerByIdUseCase implements FindCustomerByIdInputPort {
 
     @Override
     public Customer find(String id){
-        return findCustomerByIdOutputPort.find(id).orElseThrow(() -> new RuntimeException("Customer not found"));
+        return findCustomerByIdOutputPort.find(id).orElseThrow(() -> new ObjectNotFoundException(id));
     }
 }
